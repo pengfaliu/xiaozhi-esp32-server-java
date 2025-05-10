@@ -1,8 +1,10 @@
 package com.xiaozhi.websocket.llm.providers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.xiaozhi.entity.SysMessage;
 import com.xiaozhi.websocket.llm.api.AbstractLlmService;
 import com.xiaozhi.websocket.llm.api.StreamResponseListener;
+import com.xiaozhi.websocket.llm.memory.ModelContext;
 import okhttp3.*;
 import okio.BufferedSource;
 
@@ -28,7 +30,7 @@ public class OllamaService extends AbstractLlmService {
     }
 
     @Override
-    protected String chat(List<Map<String, String>> messages) throws IOException {
+    protected String chat(List<Map<String, Object>> messages) throws IOException {
         // 构建请求体
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", model);
@@ -64,7 +66,7 @@ public class OllamaService extends AbstractLlmService {
     }
 
     @Override
-    protected void chatStream(List<Map<String, String>> messages, StreamResponseListener streamListener)
+    protected void chatStream(List<Map<String, Object>> messages, StreamResponseListener streamListener, ModelContext modelContext)
             throws IOException {
         // 构建请求体
         Map<String, Object> requestBody = new HashMap<>();
@@ -140,8 +142,14 @@ public class OllamaService extends AbstractLlmService {
                         }
                     }
 
+                    Map<String, Object> responseMessage = new HashMap<>();
+                    responseMessage.put("role", "assistant");
+                    responseMessage.put("content", fullResponse);
+                    responseMessage.put("messageType", SysMessage.MESSAGE_TYPE_NORMAL);
+                    messages.add(responseMessage);
                     // 通知完成
                     streamListener.onComplete(fullResponse.toString());
+                    streamListener.onFinal(messages, OllamaService.this);
                 }
             }
         });

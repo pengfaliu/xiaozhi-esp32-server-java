@@ -67,9 +67,20 @@ public class SysDevice extends SysRole {
     private String chipModelName;
 
     /**
+     * 芯片类型
+     */
+    private String type;
+
+    /**
      * 固件版本
      */
     private String version;
+
+    /**
+     * 可用全局function的名称列表(逗号分割)，为空则使用所有全局function
+     */
+    private String functionNames;
+
 
     public Integer getModelId() {
         return modelId;
@@ -188,6 +199,15 @@ public class SysDevice extends SysRole {
         return this;
     }
 
+    public String getType() {
+        return type;
+    }
+    
+    public SysDevice setType(String type) {
+        this.type = type;
+        return this;
+    }
+
     public String getVersion() {
         return version;
     }
@@ -197,12 +217,21 @@ public class SysDevice extends SysRole {
         return this;
     }
 
+    public String getFunctionNames() {
+        return functionNames;
+    }
+
+    public void setFunctionNames(String functionNames) {
+        this.functionNames = functionNames;
+    }
+
     @Override
     public String toString() {
         return "SysDevice [deviceId=" + deviceId + ", sessionId=" + sessionId + ", modelId=" + modelId + ", sttId="
                 + sttId + ", deviceName=" + deviceName + ", state=" + state + ", totalMessage="
                 + totalMessage + ", code=" + code + ", audioPath=" + audioPath + ", lastLogin=" + lastLogin
-                + ", wifiName=" + wifiName + ", ip=" + ip + ", chipModelName=" + chipModelName + ", version=" + version
+                + ", wifiName=" + wifiName + ", ip=" + ip + ", chipModelName=" + chipModelName
+                + ", version=" + version + ", functionNames=" + functionNames
                 + "]";
     }
 }
